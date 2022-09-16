@@ -1,0 +1,163 @@
+1- Creating Database
+CREATE DATABASE Music DEFAULT CHARACTER SET utf8;
+
+2-Creating Table - 1
+CREATE TABLE Artist (
+  artist_id INTEGER NOT NULL AUTO_INCREMENT,
+  name VARCHAR(255),
+  PRIMARY KEY(artist_id)
+) ENGINE = InnoDB;
+
+3-Creating Table - 2
+CREATE TABLE Album (
+  album_id INTEGER NOT NULL AUTO_INCREMENT,
+  title VARCHAR(255),
+  artist_id INTEGER,
+  PRIMARY KEY(album_id),
+  INDEX USING BTREE (title),
+  CONSTRAINT FOREIGN KEY (artist_id)
+    REFERENCES Artist (artist_id)
+    ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB;
+
+4-Creating Table - 3
+CREATE TABLE Genre (
+  genre_id INTEGER NOT NULL AUTO_INCREMENT,
+  name VARCHAR(255),
+  PRIMARY KEY(genre_id)
+) ENGINE = InnoDB;
+
+5-Creating Table - 4
+CREATE TABLE Track (
+  track_id INTEGER NOT NULL AUTO_INCREMENT,
+  title VARCHAR(255),
+  len INTEGER,
+  rating INTEGER,
+  count INTEGER,
+  album_id INTEGER,
+  genre_id INTEGER,
+  PRIMARY KEY(track_id),
+  INDEX USING BTREE (title),
+  CONSTRAINT FOREIGN KEY (album_id) REFERENCES Album (album_id)
+  ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT FOREIGN KEY (genre_id) REFERENCES Genre (genre_id)
+  ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB;
+
+6-Inserting Artist names
+INSERT INTO Artist (name) VALUES ('Billy Price');
+INSERT INTO Artist (name) VALUES ('Black Sabbath');
+
+7-Inserting Genre values
+INSERT INTO Genre (name) VALUES ('Blues/R&B');
+INSERT INTO Genre (name) VALUES ('Metal');
+
+8-Inserting Album names and foreign key for artist id
+INSERT INTO Album (title, artist_id) VALUES ('Danger Zone', 2);
+INSERT INTO Album (title, artist_id) VALUES ('Paranoid', 1);
+
+8-Inserting Track names and foreign key for artist id and genre id
+INSERT INTO Track (title, rating, len, count, album_id, genre_id)
+    VALUES ('Track02', 5, 365, 0, 2, 1);
+INSERT INTO Track (title, rating, len, count, album_id, genre_id)
+    VALUES ('Track03', 5, 388, 0, 2, 1);
+INSERT INTO Track (title, rating, len, count, album_id, genre_id)
+    VALUES ('Planet Carvan', 5, 421, 0, 1, 2);
+INSERT INTO Track (title, rating, len, count, album_id, genre_id)
+    VALUES ('Iron Man', 5, 410, 0, 1, 2);
+
+9-Joining Album and Artist table to view title and artist name
+SELECT Album.title, Artist.name FROM Album JOIN Artist ON
+    Album.artist_id = Artist.artist_id
+
+10-Joining Album and Artist table to view title, album id, artist id and artist name
+SELECT Album.title, Album.artist_id, Artist.artist_id, Artist.name 
+    FROM Album JOIN Artist ON Album.artist_id = Artist.artist_id
+
+11-Joining track and Genre table without ON to view all the values that gets connected
+SELECT Track.title, Track.genre_id, Genre.genre_id, Genre.name 
+    FROM Track JOIN Genre
+
+12-Joining multiple tables (Track, Genre, Album and Artist table)
+SELECT Track.title, Artist.name, Album.title, Genre.name 
+    FROM Track JOIN Genre JOIN Album JOIN Artist 
+    ON Track.genre_id = Genre.genre_id AND Track.album_id = 
+    Album.album_id AND Album.artist_id = Artist.artist_id
+
+
+13-Dropping tables
+DROP TABLE Track; DROP TABLE Album; DROP TABLE Genre; DROP TABLE Artist;
+
+14-Creating new database for Many to Many example
+CREATE DATABASE Roster DEFAULT CHARACTER SET utf8 ;
+
+15-Creating Table 1
+CREATE TABLE `User` (
+    user_id     INTEGER NOT NULL AUTO_INCREMENT,
+    name        VARCHAR(128) UNIQUE,
+    PRIMARY KEY(user_id)
+) ENGINE=InnoDB CHARACTER SET=utf8;
+
+16-Creating Table 2
+CREATE TABLE Course (
+    course_id     INTEGER NOT NULL AUTO_INCREMENT,
+    title         VARCHAR(128) UNIQUE,
+    PRIMARY KEY(course_id)
+) ENGINE=InnoDB CHARACTER SET=utf8;
+
+17-Creating Table 3 (Connector/Junction table)
+CREATE TABLE Member (
+    user_id       INTEGER,
+    course_id     INTEGER,
+    role          INTEGER,
+    CONSTRAINT FOREIGN KEY (user_id) REFERENCES `User` (user_id)
+      ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT FOREIGN KEY (course_id) REFERENCES Course (course_id)
+       ON DELETE CASCADE ON UPDATE CASCADE,
+    PRIMARY KEY (user_id, course_id)
+) ENGINE=InnoDB CHARACTER SET=utf8;
+
+18-Inserting data into Table 1
+INSERT INTO User (name) VALUES ('Koden');
+INSERT INTO User (name) VALUES ('Akam');
+INSERT INTO User (name) VALUES ('Jarl');
+INSERT INTO User (name) VALUES ('Mhea');
+INSERT INTO User (name) VALUES ('Rubi');
+INSERT INTO User (name) VALUES ('Kellen');
+INSERT INTO User (name) VALUES ('Fathima');
+INSERT INTO User (name) VALUES ('Idris');
+INSERT INTO User (name) VALUES ('Jakob');
+INSERT INTO User (name) VALUES ('Sofie');
+INSERT INTO User (name) VALUES ('Patrick');
+INSERT INTO User (name) VALUES ('Jedd');
+INSERT INTO User (name) VALUES ('Kiaya');
+INSERT INTO User (name) VALUES ('Lanah');
+INSERT INTO User (name) VALUES ('Liam');
+
+19-Inserting data into table 2
+INSERT INTO Course (title) VALUES ('si106');
+INSERT INTO Course (title) VALUES ('si110');
+INSERT INTO Course (title) VALUES ('si206');
+
+20-Inserting data into table 3 along with foreign keys
+INSERT INTO Member (user_id, course_id, role) VALUES (1, 1, 1);
+INSERT INTO Member (user_id, course_id, role) VALUES (2, 1, 0);
+INSERT INTO Member (user_id, course_id, role) VALUES (3, 1, 0);
+INSERT INTO Member (user_id, course_id, role) VALUES (4, 1, 0);
+INSERT INTO Member (user_id, course_id, role) VALUES (5, 1, 0);
+INSERT INTO Member (user_id, course_id, role) VALUES (6, 2, 1);
+INSERT INTO Member (user_id, course_id, role) VALUES (7, 2, 0);
+INSERT INTO Member (user_id, course_id, role) VALUES (8, 2, 0);
+INSERT INTO Member (user_id, course_id, role) VALUES (9, 2, 0);
+INSERT INTO Member (user_id, course_id, role) VALUES (10, 2, 0);
+INSERT INTO Member (user_id, course_id, role) VALUES (11, 3, 1);
+INSERT INTO Member (user_id, course_id, role) VALUES (12, 3, 0);
+INSERT INTO Member (user_id, course_id, role) VALUES (13, 3, 0);
+INSERT INTO Member (user_id, course_id, role) VALUES (14, 3, 0);
+INSERT INTO Member (user_id, course_id, role) VALUES (15, 3, 0);
+
+21-Joining Table 1, 2, and 3
+SELECT `User`.name, Course.title, Member.role
+    FROM `User` JOIN Member JOIN Course
+    ON `User`.user_id = Member.user_id AND Member.course_id = Course.course_id
+    ORDER BY Course.title, Member.role DESC, `User`.name
