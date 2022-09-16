@@ -1,0 +1,65 @@
+1 - Create Sample Database
+CREATE DATABASE People DEFAULT CHARACTER SET utf8;
+
+2 - Create sample table
+CREATE TABLE Users (
+  name VARCHAR(128), 
+  email VARCHAR(128)
+);
+
+3 - Insert records/values in table
+
+INSERT INTO Users (name, email) VALUES ('Chuck', 'csev@umich.edu') ;
+INSERT INTO Users (name, email) VALUES ('Sally', 'sally@umich.edu') ;
+INSERT INTO Users (name, email) VALUES ('Somesh', 'somesh@umich.edu') ;
+INSERT INTO Users (name, email) VALUES ('Caitlin', 'cait@umich.edu') ;
+INSERT INTO Users (name, email) VALUES ('Ted', 'ted@umich.edu') ;
+
+
+4 - Delete records
+DELETE FROM Users WHERE email='ted@umich.edu';
+
+5 - Update records
+UPDATE Users SET name='Charles' WHERE email='csev@umich.edu';
+
+6- Filtering view
+
+SELECT * FROM Users WHERE email='csev@umich.edu';
+
+7 - Sorting view
+
+SELECT * FROM Users ORDER BY email;
+
+8 - Wildcard use for name contains letter "E"
+
+SELECT * FROM Users WHERE name LIKE '%e%';
+
+9 - Controling view scope by limited rows/recods in display
+
+SELECT * FROM Users ORDER BY email DESC LIMIT 2;
+
+10 - Controling view scope by limited rows/recods in display starting/limited rows view
+
+SELECT * FROM Users ORDER BY email LIMIT 1,2;
+
+11 - Creating table with data types as primary key, index
+
+CREATE TABLE Users (
+  user_id INT UNSIGNED NOT NULL AUTO_INCREMENT, 
+  name VARCHAR(128), 
+  email VARCHAR(128),
+  PRIMARY KEY(user_id),
+  INDEX ( name )
+);
+
+12 - To add the index after the table is created
+
+ALTER TABLE Users ADD INDEX ( name );
+
+13 - Inserting values in the table 
+
+INSERT INTO Users (name, email) VALUES ('Chuck', 'csev@umich.edu') ;
+INSERT INTO Users (name, email) VALUES ('Sally', 'sally@umich.edu') ;
+INSERT INTO Users (name, email) VALUES ('Somesh', 'somesh@umich.edu') ;
+INSERT INTO Users (name, email) VALUES ('Caitlin', 'cait@umich.edu') ;
+INSERT INTO Users (name, email) VALUES ('Ted', 'ted@umich.edu') ;
