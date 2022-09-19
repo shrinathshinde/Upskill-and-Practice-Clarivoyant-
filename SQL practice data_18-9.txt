@@ -1,0 +1,69 @@
+Topics covered
+1-Database review
+2-Join with the WHERE Clause - List of USA customers, invoices, dates and total from invoice and customer tables
+select firstname, lastname,invoiceid,invoicedate,total
+from invoice, customer
+where billingcountry='USA'
+and invoice.customerid=customer.customerid
+
+3-Join with the JOIN Statement - Display the artist name and title from artist and album table
+Select name, title from artist
+join album on artist.artistid=album.artistid
+order by name, title
+
+4-Grouping, Summing, Counting, and More - Display the list of customerids with total sale by max, min and avg invoice amount grouped and order by customers
+Select customerid, sum(total) as 'TotalSale',
+max(total) as 'Largest Invoice Amount',
+min(total) as 'Smallest Invoice Amount',
+avg(total as 'Average Invoice Amount'
+from invoice
+group by customerid
+order by customerid
+
+5-Nested Queries - List of the Customers Invoices having Total above avg sales total 
+Select lastname, firstname from customer
+where customerid in
+(select customerid from invoice where total>
+(select avg(total) from invoice))
+
+6-The Kitchen Sink Script - Multiple procedures in one script
+
+1 - Sales Invoice details for orders of more than 10 tracks
+select invoicedate, invoice.invoiceid,
+    LastName, FirstName,  
+    artist.name as 'Artist',
+    album.title as 'Album', 
+    track.name as 'Track',
+    quantity, invoiceline.unitprice,
+    (quantity * invoiceline. unitprice) as 'extended price'
+from invoice, customer, invoiceline, track, album, artist
+where invoice.customerid = customer.customerid
+  and invoice.InvoiceId = invoiceline.InvoiceId
+  and invoiceline.TrackId = track.TrackId 
+  and track.AlbumId = album.albumid
+  and album.ArtistId = artist.artistid
+  and invoice.invoiceid in
+      (select invoiceid 
+		from invoiceline
+		group by invoiceline.invoiceid
+		having count(*) > 10)
+ order by invoicedate desc, invoice.invoiceid ; 
+
+2 - Albums and Tracks by Playlist
+
+SELECT playlist.name as 'Playlist',
+  album.title as 'Album', 
+  track.name as 'Track'
+from album join track
+  on album.albumid = track.albumid
+  join playlisttrack
+  on track.TrackId = playlisttrack.TrackId
+  join playlist
+  on playlist.PlaylistId = playlisttrack.playlistid
+  order by playlist.name, album.title;
+
+Task 7: Checking Results
+- Dest check the query field and table names and calculation accuracy if any used
+- Take a close look at the the output
+spotchecking the nubmer of rows, calculated fields, grouping etc.
+
