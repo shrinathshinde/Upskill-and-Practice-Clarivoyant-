@@ -1,0 +1,118 @@
+Python - Exploratory Data Analysis (EDA)
+Descriptive Statistics - 
+1 - describe() The describe function applies basic statistical computations on the dataset like extreme values, count of data points standard deviation etc. Any missing value or NaN value is automatically skipped. describe() function gives a good picture of distribution of data.
+
+import pandas as pd
+df=pd.read_csv("Gestation.csv")
+df.describe()
+
+Result - 
+	Unnamed: 0	id	gestation	wt	parity	age	ht	wt.1	dage	dht	dwt
+count	1236.000000	1236.000000	1223.000000	1236.000000	1236.000000	1234.000000	1214.000000	1200.000000	1229.000000	744.000000	737.000000
+mean	618.500000	6000.835761	279.338512	119.576861	1.932039	27.255267	64.047776	128.625833	30.348251	70.204301	171.200814
+std	356.946775	2257.288706	16.027693	18.236452	1.932943	5.781405	2.533409	20.971862	6.805999	2.891242	22.386558
+min	1.000000	15.000000	148.000000	55.000000	0.000000	15.000000	53.000000	87.000000	18.000000	60.000000	110.000000
+25%	309.750000	5286.250000	272.000000	108.750000	0.000000	23.000000	62.000000	114.750000	25.000000	68.000000	155.000000
+50%	618.500000	6729.500000	280.000000	120.000000	1.000000	26.000000	64.000000	125.000000	29.000000	71.000000	170.000000
+75%	927.250000	7583.250000	288.000000	131.000000	3.000000	31.000000	66.000000	139.000000	34.000000	72.000000	185.000000
+max	1236.000000	9263.000000	353.000000	176.000000	13.000000	45.000000	72.000000	250.000000	62.000000	78.000000	260.000000
+
+2 - value.count() using above df which can get count of each category in a categorical attributed series of values.
+
+df["ded"].value_counts()
+
+Result - 
+College graduate                      347
+HS graduate--no other schooling       342
+HS+some college                       265
+8th -12th grade - did not graduate    193
+HS+trade                               37
+less than 8th grade                    33
+Trade school HS unclear                 6
+Name: ded, dtype: int64
+
+3 - Boxplot is a pictorial representation of distribution of data which shows extreme values, median and quartiles. We can easily figure out outliers by using boxplots.
+In below script above df result is used to show the distribution in the view of boxplot
+***But how can I capture outliers if required from the same.
+
+import pandas as pd
+import matplotlib.pyplot as plt
+df = pd.read_csv("Gestation.csv")
+y = list(df["ded"].value_counts())
+plt.boxplot(y)
+plt.show()
+
+Result image retunred outliers at start from <30 and >300
+
+4 - Grouping data -  help us figure out effect of different categorical attributes on other data variables
+
+DF.groupby(['race']).count()
+	Unnamed: 0	id	pluralty	outcome	date	gestation	sex	wt	parity	age	...	drace	dage	ded	dht	dwt	marital	inc	smoke	time	number
+race																					
+asian	44	44	44	44	44	44	44	44	44	44	...	44	43	44	31	30	44	41	43	43	42
+black	244	244	244	244	244	241	244	244	244	243	...	237	243	238	165	162	243	212	242	242	241
+mex	40	40	40	40	40	40	40	40	40	40	...	40	40	40	24	25	40	35	39	39	39
+mixed	25	25	25	25	25	25	25	25	25	25	...	13	25	24	17	17	25	19	25	25	25
+white	870	870	870	870	870	860	870	870	870	869	...	851	866	864	497	494	869	793	864	864	855
+5 rows × 23 columns
+
+5 - Creating a pivot applying heatmap view
+
+order1=df['race']
+order2=df['ded']
+crosstable=pd.crosstab(order1,order2)
+crosstable
+crosstable.style.background_gradient(cmap='RdYlGn')
+
+Result - 
+
+ded	8th -12th grade - did not graduate	College graduate	HS graduate--no other schooling	HS+some college	HS+trade	Trade school HS unclear	less than 8th grade
+race							
+asian	0	21	10	10	2	1	0
+black	47	14	83	69	7	1	17
+mex	16	3	12	1	1	0	7
+mixed	6	3	4	11	0	0	0
+white	123	301	231	172	27	4	6
+
+6 - Correlation metrix
+import seaborn as sns
+corrmat=df.corr()
+f, ax = plt.subplots(figsize =(9, 8))
+sns.heatmap(corrmat, ax = ax, cmap ="YlGnBu", linewidths = 0.1)
+
+- Grid correlation
+corrmat = df.corr()
+cg = sns.clustermap(corrmat, cmap ="YlGnBu", linewidths = 0.1);
+plt.setp(cg.ax_heatmap.yaxis.get_majorticklabels(), rotation = 0)
+cg
+
+7 - Data Cleansing for Visualisation
+i) - Identifying Missing Data - df.isnull().sum()
+Result - id              0
+pluralty        0
+outcome         0
+date            0
+gestation      13
+sex             0
+wt              0
+parity          0
+race           13
+age             2
+ed              1
+ht             22
+wt.1           36
+drace          46
+dage            7
+ded            13
+dht           492
+dwt           499
+marital         2
+inc           124
+smoke          10
+time           10
+number         21
+dtype: int64
+
+ii) - Dropping null - df1=df.dropna()
+iii) - Filling null with 0 - df.fillna(value=0, inplace=True) 
+
