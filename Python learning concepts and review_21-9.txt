@@ -1,0 +1,37 @@
+21-9-2022
+
+Python leaning high level concenpts understanding and review
+
+1 - Data analysis with libraries (Pandas, Seaborn/Maplotlib)
+- Pandas is an open-source library commonly used in data science. 
+It is primarily used for data analysis, data manipulation, and data cleaning. 
+Pandas allow for simple data modeling and data analysis operations without needing to write a lot of code.
+
+- Matplotlib is an extensive library for creating fixed, interactive, and animated Python visualizations.
+
+- Seaborn is another popular Matplotlib-based Python data visualization framework, Seaborn is a high-level interface for creating aesthetically appealing and valuable statistical visuals which are crucial for studying and comprehending data.  
+
+2 - Functions - Python Functions is a block of statements that return the specific task.
+The idea is to put some commonly or repeatedly done tasks together and make a function 
+so that instead of writing the same code again and again for different inputs, 
+we can do the function calls to reuse code contained in it over and over again.
+e.g.- 
+def my_function(*kids):
+print("The youngest child is " + kids[2])
+
+my_function("Emil", "Tobias", "Linus")
+
+-Unique - The unique() function from Numpy is used to find the unique elements of an array.
+
+- Set - The set() function creates a set object. The items in a set list are unordered, so it will appear in random order
+
+- Union - The union() method returns a set that contains all items from the original set, and all items from the specified set(s).
+We can specify as many sets you want, separated by commas. It does not have to be a set, it can be any iterable object.
+
+- Groupby - A groupby() function is used to split the data into groups based on some criteria.
+
+- lambda - A lambda function can take any number of arguments, but can only have one expression.
+
+- Pivot - The pivot() function is used to reshaped a given DataFrame organized by given index / column values.
+
+- unpivot - In pandas, we can use the melt() function to unpivot a DataFrame – converting it from a wide format to a long format
