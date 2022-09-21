@@ -1,0 +1,4 @@
+
+Loops, functions classes, data structures, dataframe, data files (csv, json, excel,)
+
+Data analysis with libraries (Pandas, Seaborn/Maplotlib).  Functions like Unique, set, union, groupby, lambda, pivot/unpivot.
