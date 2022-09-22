@@ -1,0 +1,203 @@
+22-9-2022
+
+SQL learning, revision and Practice
+
+1-Subqueries
+
+Find the Invoice Total which is more than the avrage Total of all the Invoices grouped by countries
+
+Select * from Invoice
+where Total > (select avg(Total) from Invoice)
+Group by BillingCountry
+Order by Total;
+
+O/p - avg = 5.65
+InvoiceId	CustomerId	InvoiceDate	BillingCountry	Total
+164	56	2008-12-16 00:00:00	Argentina	5.94
+66	55	2007-10-09 00:00:00	Australia	5.94
+3	8	2007-01-03 00:00:00	Belgium	5.94
+101	9	2008-03-12 00:00:00	Denmark	5.94
+45	59	2007-07-08 00:00:00	India	5.94
+10	46	2007-02-03 00:00:00	Ireland	5.94
+108	47	2008-04-12 00:00:00	Italy	5.94
+24	4	2007-04-06 00:00:00	Norway	5.94
+73	34	2007-11-09 00:00:00	Portugal	5.94
+87	51	2008-01-10 00:00:00	Sweden	6.94
+25	10	2007-04-09 00:00:00	Brazil	8.91
+4	14	2007-01-06 00:00:00	Canada	8.91
+46	6	2007-07-11 00:00:00	Czech Republic	8.91
+53	44	2007-08-11 00:00:00	Finland	8.91
+32	48	2007-05-10 00:00:00	Netherlands	8.91
+11	52	2007-02-06 00:00:00	United Kingdom	8.91
+33	57	2007-05-15 00:00:00	Chile	13.86
+19	40	2007-03-14 00:00:00	France	13.86
+12	2	2007-02-11 00:00:00	Germany	13.86
+75	49	2007-11-17 00:00:00	Poland	13.86
+173	50	2009-01-24 00:00:00	Spain	13.86
+5	23	2007-01-11 00:00:00	USA	13.86
+89	7	2008-01-18 00:00:00	Austria	18.86
+96	45	2008-02-18 00:00:00	Hungary	21.86
+
+1.2 - Scalar Subqueries - has 1 column and 1 row in a subquery
+Find the Invoice Total which is more than the avrage Total of all the Invoices grouped by countries
+
+Select InvoiceId, CustomerId, InvoiceDate, BillingCountry, Total 
+from Invoice as i
+join (select avg(Total) as amt from Invoice) as avg_total
+on i.Total > avg_total.amt
+Group by BillingCountry
+Order by Total;
+
+O/p - avg = 5.65
+InvoiceId	CustomerId	InvoiceDate	BillingCountry	Total
+164	56	2008-12-16 00:00:00	Argentina	5.94
+66	55	2007-10-09 00:00:00	Australia	5.94
+3	8	2007-01-03 00:00:00	Belgium	5.94
+101	9	2008-03-12 00:00:00	Denmark	5.94
+45	59	2007-07-08 00:00:00	India	5.94
+10	46	2007-02-03 00:00:00	Ireland	5.94
+108	47	2008-04-12 00:00:00	Italy	5.94
+24	4	2007-04-06 00:00:00	Norway	5.94
+73	34	2007-11-09 00:00:00	Portugal	5.94
+87	51	2008-01-10 00:00:00	Sweden	6.94
+25	10	2007-04-09 00:00:00	Brazil	8.91
+4	14	2007-01-06 00:00:00	Canada	8.91
+46	6	2007-07-11 00:00:00	Czech Republic	8.91
+53	44	2007-08-11 00:00:00	Finland	8.91
+32	48	2007-05-10 00:00:00	Netherlands	8.91
+11	52	2007-02-06 00:00:00	United Kingdom	8.91
+33	57	2007-05-15 00:00:00	Chile	13.86
+19	40	2007-03-14 00:00:00	France	13.86
+12	2	2007-02-11 00:00:00	Germany	13.86
+75	49	2007-11-17 00:00:00	Poland	13.86
+173	50	2009-01-24 00:00:00	Spain	13.86
+5	23	2007-01-11 00:00:00	USA	13.86
+89	7	2008-01-18 00:00:00	Austria	18.86
+96	45	2008-02-18 00:00:00	Hungary	21.86
+
+1.3 - Multiple row subqueries
+
+Find the invoices with highest total in each country
+
+SELECT InvoiceId, BillingCountry, Total
+FROM Invoice 
+WHERE (BillingCountry,Total) 
+IN (SELECT BillingCountry, MAX(Total) FROM Invoice group by BillingCountry)
+GROUP BY BillingCountry;
+
+O/p- 
+
+InvoiceId BillingCountry Total
+348	Argentina 13.86
+250	Australia 13.86
+89	Austria	18.86
+187	Belgium	13.86
+68	Brazil	13.86
+47	Canada	13.86
+88	Chile	17.91
+404	Czech Republic	25.86
+285	Denmark	13.86
+411	Finland	13.86
+313	France	16.86
+193	Germany	14.91
+96	Hungary	21.86
+131	India	13.86
+194	Ireland	21.86
+292	Italy	13.86
+390	Netherlands 13.86
+208	Norway	15.86
+75	Poland	13.86
+257	Portugal13.86
+173	Spain	13.86
+271	Sweden	13.86
+299	USA	23.86
+54	United Kingdom 13.86
+
+2 - SQL View - Database object representing underlined sql query data
+
+CREATE View Top_10_Customer_and_Country as
+SELECT c.CustomerId, i.BillingCountry,sum(Total)
+FROM Customer as c JOIN Invoice as i
+on c.CustomerId = i.CustomerId 
+GROUP BY c.CustomerId
+Order BY SUM(Total) Desc LIMIT 10;
+O/p -
+CustomerId	BillingCountry	"sum(Total)"
+6	Czech Republic	49.62
+26	USA	47.62
+57	Chile	46.62
+45	Hungary	45.62
+46	Ireland	45.62
+28	USA	43.62
+24	USA	43.62
+37	Germany	43.62
+7	Austria	42.62
+25	USA	42.62
+
+SELECT * FROM Top_10_Customer_and_Country limit 5;
+CustomerId	BillingCountry	"sum(Total)"
+6	Czech Republic	49.62
+26	USA	47.62
+57	Chile	46.62
+45	Hungary	45.62
+46	Ireland	45.62
+
+3 - CTE (with statement)
+Find the Invoice Total which is more than the average Total of all the Invoices
+WITH avg_invoice_amt (avg_amount) AS 
+(select CAST (avg(sum_total) as int) from Top_10_Customer_and_Country)
+Select * from Top_10_Customer_and_Country, avg_invoice_amt as av
+WHERE sum_total > av.avg_amount;
+
+O/p - 
+CustomerId BillingCountry sum_total avg_amount
+6	Czech Republic	49.62	45
+26	USA	47.62	45
+57	Chile	46.62	45
+45	Hungary	45.62	45
+46	Ireland	45.62	45
+
+4 - Understanding of ER diagrams
+
+https://www.lucidchart.com/pages/er-diagrams
+
+An Entity Relationship (ER) Diagram is a type of flowchart that illustrates how “entities” such as people, objects or concepts relate to each other within a system.
+ER Diagrams are most often used to design or debug relational databases in the fields of software engineering, business information systems, education and research.
+defined set of symbols such as rectangles, diamonds, ovals and connecting lines to depict the interconnectedness of entities, relationships and their attributes.
+ER diagrams are related to data structure diagrams (DSDs), which focus on the relationships of elements.
+
+- Entity
+A definable thing—such as a person, object, concept or event—that can have data stored about it.
+Entity categories: Entities are categorized as strong, weak or associative. A strong entity can be defined solely by its own attributes, while a weak entity cannot. 
+An associative entity associates entities (or elements) within an entity set.
+
+- Relationship - Weak relationship
+How entities act upon each other or are associated with each other. Think of relationships as verbs. For example, the named student might register for a course.
+- Recursive relationship: The same entity participates more than once in the relationship.
+
+- Attribute - Key Attribute - Partial Key Attribute
+A property or characteristic of an entity. Often shown as an oval or circle.
+
+- Descriptive attribute: A property or characteristic of a relationship
+
+- Attribute categories: 
+Simple: Means the attribute value is atomic and can’t be further divided, such as a phone number. 
+Composite: Sub-attributes spring from an attribute. 
+Derived: Attributed is calculated or otherwise derived from another attribute, such as age from a birthdate.
+Multi-value: More than one attribute value is denoted, such as multiple phone numbers for a person.
+Single-value: Just one attribute value. The types can be combined, such as: simple single-value attributes or composite multi-value attributes.
+
+- Cardinality
+Defines the numerical attributes of the relationship between two entities or entity sets. 
+The three main cardinal relationships are one-to-one, one-to-many, and many-many.
+
+5 - Data Models - Conceptual, logical and physical
+ER models and data models are typically drawn at up to three levels of detail:
+
+- Conceptual data model: The highest-level view containing the least detail. Its value is showing overall scope of the model and portraying the system architecture. 
+For a system of smaller scope, it may not be necessary to draw. Instead, start with the logical model.
+
+- Logical data model: Contains more detail than a conceptual model. More detailed operational and transactional entities are now defined. 
+The logical model is independent of the technology in which it will be implemented.
+
+- Physical data model: One or more physical model may be developed from each logical model. The physical models must show enough technology detail to produce and implement the actual database.
