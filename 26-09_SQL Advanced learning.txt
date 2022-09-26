@@ -1,0 +1,248 @@
+Advanced SQL
+
+Running aggregate functions & window functions
+
+Rollup, cube
+
+Row number, rank, dense rank, first, last, nth value, lead, lag, ntile
+
+Recursive CTE/connect by, 
+
+Pivot, Unpivot
+
+Stored procedures/triggers (optional)
+
+1 - Find the Yearly Running Aggregate of Invoices amount
+
+Year	Yearly_Total		Running_Total
+2007	449.46			449.46
+2008	481.45			930.91
+2009	483.44			1414.35
+2010	463.67			1878.02
+2011	450.58			2328.60
+
+2 - Find the Top 10 rows with BillingCountry, InvoiceId, Total.
+SELECT * from 
+(select BillingCountry, InvoiceId, Total,
+ROW_NUMBER () over(order by BillingCountry) as Rownumber
+FROM Invoice) as x
+WHERE x.Rownumber<=10;
+BillingCountry	InvoiceId	Total	Rownumber
+Argentina	119		1.98	1
+Argentina	142		3.96	2
+Argentina	164		5.94	3
+Argentina	216		0.99	4
+Argentina	337		1.98	5
+Argentina	348		13.86	6
+Argentina	403		8.91	7
+Australia	21		1.98	8
+Australia	44		3.96	9
+Australia	66		5.94	10
+
+2 - Find the top 10 rows of Countries ranking with Invoice Amount Total and max amount of each country.
+SELECT * from 
+(select BillingCountry, InvoiceId,
+RANK() over(order by Total DESC) as ranking,
+Total,
+max(Total) over(order by BillingCountry) as Max_Total
+FROM Invoice) as x
+WHERE x.ranking<=10;
+
+BillingCountry	InvoiceId 	ranking	Total	Max_Total6
+Czech Republic	404		1	25.86	25.86
+USA		299		2	23.86	25.86
+Hungary		96		3	21.86	25.86
+Ireland		194		3	21.86	25.86
+Austria		89		5	18.86	18.86
+USA		201		5	18.86	25.86
+Chile		88		7	17.91	18.86
+Czech Republic	306		8	16.86	25.86
+France		313		8	16.86	25.86
+Norway		208		10	15.86	25.86
+USA		103		10	15.86	25.86
+
+3 - Find the top 5 dense ranking of Countries with Invoice Amount Total and max amount against the same.
+SELECT * from 
+(select BillingCountry, InvoiceId,
+DENSE_RANK() over(order by Total DESC) as Dns_ranking,
+Total,
+max(Total) over(PARTITION by BillingCountry order by BillingCountry) as Max_Total
+FROM Invoice) as x
+WHERE x.dns_ranking<=5;
+
+BillingCountry	InvoiceId	Dns_ranking	Total	Max_Total
+Czech Republic	404		1		25.86	25.86
+USA		299		2		23.86	23.86
+Hungary		96		3		21.86	21.86
+Ireland		194		3		21.86	21.86
+Austria		89		4		18.86	18.86
+USA		201		4		18.86	23.86
+Chile		88		5		17.91	17.91
+
+4 - For USA billing country show comparision between current and previous invoices amount for billing year as 2007.
+SELECT
+BillingCountry, InvoiceDate, InvoiceId,Total,
+lag(Total) over(PARTITION by BillingCountry order by InvoiceDate) as Prev_Inv_Amt
+FROM Invoice
+WHERE BillingCountry='USA';
+
+BillingCountry	InvoiceDate	InvoiceId	Total	Prev_Inv_Amt
+USA		2007-01-11 00:00:00	5	13.86	null
+USA		2007-02-19 00:00:00	13	0.99	13.86
+USA		2007-03-04 00:00:00	14	1.98	0.99
+USA		2007-03-04 00:00:00	15	1.98	1.98
+USA		2007-03-05 00:00:00	16	3.96	1.98
+USA		2007-03-06 00:00:00	17	5.94	3.96
+USA		2007-04-14 00:00:00	26	13.86	5.94
+USA		2007-06-06 00:00:00	37	3.96	13.86
+USA		2007-06-07 00:00:00	38	5.94	3.96
+USA		2007-06-10 00:00:00	39	8.91	5.94
+USA		2007-09-08 00:00:00	59	5.94	8.91
+USA		2007-09-11 00:00:00	60	8.91	5.94
+USA		2007-10-25 00:00:00	69	0.99	8.91
+USA		2007-11-07 00:00:00	70	1.98	0.99
+USA		2007-11-07 00:00:00	71	1.98	1.98
+USA		2007-12-13 00:00:00	81	8.91	1.98
+USA		2007-12-18 00:00:00	82	13.86	8.91
+
+5 - For USA billing country find the Diff between current and next invoices amount for billing year as 2007.
+SELECT
+BillingCountry, InvoiceDate, InvoiceId,Total,
+LEAD(Total) over(PARTITION by BillingCountry order by InvoiceDate) as Nxt_Inv_Amt,
+Cast((LEAD(Total) over(PARTITION by BillingCountry order by InvoiceDate)-Total) as int) as 'Diff +/-'
+FROM Invoice
+WHERE BillingCountry='USA' and strftime('%Y', InvoiceDate) = '2007';
+
+BillingCountry	InvoiceDate		InvoiceId	Total	Nxt_Inv_Amt	"Diff +/-"
+USA		2007-01-11 00:00:00	5		13.86	0.99		-12
+USA		2007-02-19 00:00:00	13		0.99	1.98		0
+USA		2007-03-04 00:00:00	14		1.98	1.98		0
+USA		2007-03-04 00:00:00	15		1.98	3.96		1
+USA		2007-03-05 00:00:00	16		3.96	5.94		1
+USA		2007-03-06 00:00:00	17		5.94	13.86		7
+USA		2007-04-14 00:00:00	26		13.86	3.96		-9
+USA		2007-06-06 00:00:00	37		3.96	5.94		1
+USA		2007-06-07 00:00:00	38		5.94	8.91		2
+USA		2007-06-10 00:00:00	39		8.91	5.94		-2
+USA		2007-09-08 00:00:00	59		5.94	8.91		2
+USA		2007-09-11 00:00:00	60		8.91	0.99		-7
+USA		2007-10-25 00:00:00	69		0.99	1.98		0
+USA		2007-11-07 00:00:00	70		1.98	1.98		0
+USA		2007-11-07 00:00:00	71		1.98	8.91		6
+USA		2007-12-13 00:00:00	81		8.91	13.86		4
+USA		2007-12-18 00:00:00	82		13.86	null		null	
+
+6 - First_Value - Find the CustomerId in USA with the highest Invoice amount for each Billing Date in 2007.
+
+SELECT
+CustomerId , InvoiceDate, InvoiceId,Total,
+first_value(CustomerId) over(PARTITION by InvoiceDate order by Total DESC) as Highest_Amount
+FROM Invoice
+WHERE BillingCountry='USA' and strftime('%Y', InvoiceDate) = '2007';
+
+CustomerId	InvoiceDate		InvoiceId	Total	Highest_Amount
+23		2007-01-11 00:00:00	5		13.86	23
+16		2007-02-19 00:00:00	13		0.99	16
+17		2007-03-04 00:00:00	14		1.98	17
+19		2007-03-04 00:00:00	15		1.98	17
+21		2007-03-05 00:00:00	16		3.96	21
+25		2007-03-06 00:00:00	17		5.94	25
+19		2007-04-14 00:00:00	26		13.86	19
+17		2007-06-06 00:00:00	37		3.96	17
+21		2007-06-07 00:00:00	38		5.94	21
+27		2007-06-10 00:00:00	39		8.91	27
+17		2007-09-08 00:00:00	59		5.94	17
+23		2007-09-11 00:00:00	60		8.91	23
+25		2007-10-25 00:00:00	69		0.99	25
+26		2007-11-07 00:00:00	70		1.98	26
+28		2007-11-07 00:00:00	71		1.98	26
+19		2007-12-13 00:00:00	81		8.91	19
+28		2007-12-18 00:00:00	82		13.86	28
+
+7 - last_Value - Find the last invoice total of CustomerId from USA with each Billing Date in 2008.
+
+SELECT CustomerId , InvoiceDate, InvoiceId,
+last_value(CustomerId) over(PARTITION by InvoiceDate order by Total DESC) as Lowest_Amount
+FROM Invoice
+WHERE BillingCountry='USA' and strftime('%Y', InvoiceDate) = '2008';
+
+CustomerId	InvoiceDate		InvoiceId	Lowest_Amount
+21		2008-01-26 00:00:00	90		21
+22		2008-02-08 00:00:00	91		24
+24		2008-02-08 00:00:00	92		24
+26		2008-02-09 00:00:00	93		26
+24		2008-03-20 00:00:00	103		24
+17		2008-04-28 00:00:00	111		17
+18		2008-05-11 00:00:00	112		20
+20		2008-05-11 00:00:00	113		20
+22		2008-05-12 00:00:00	114		22
+26		2008-05-13 00:00:00	115		26
+20		2008-06-21 00:00:00	124		20
+16		2008-08-12 00:00:00	134		16
+18		2008-08-13 00:00:00	135		18
+22		2008-08-14 00:00:00	136		22
+28		2008-08-17 00:00:00	137		28
+16		2008-09-22 00:00:00	145		16
+18		2008-11-15 00:00:00	157		18
+24		2008-11-18 00:00:00	158		24
+
+8 - nth_Value - Find the 3rd highest invoice total from USA.
+
+SELECT CustomerId , InvoiceDate, InvoiceId,Total,
+nth_value(CustomerId,3) over(order by Total DESC) as 3rd_highest
+FROM Invoice
+WHERE BillingCountry='USA' ;
+
+CustomerId	InvoiceDate		InvoiceId	Total	3rd_highest
+26		2010-08-05 00:00:00	299		23.86	null
+25		2009-05-28 00:00:00	201		18.86	null
+24		2008-03-20 00:00:00	103		15.86	24
+23		2007-01-11 00:00:00	5		13.86	24
+19		2007-04-14 00:00:00	26		13.86	24
+28		2007-12-18 00:00:00	82		13.86	24
+20		2008-06-21 00:00:00	124		13.86	24
+16		2008-09-22 00:00:00	145		13.86	24
+21		2009-08-29 00:00:00	222		13.86	24
+17		2009-11-30 00:00:00	243		13.86	24
+
+9 - ntile - Categories the customer invoicing amount of USA in 2008 as highest medium and lowest.
+
+Customer id	Category
+24		Highest
+20		Highest
+16		Highest
+28		Highest
+24		Highest
+26		Highest
+22		Medium
+18		Medium
+26		Medium
+22		Medium
+18		Medium
+22		Medium
+24		Lowest
+18		Lowest
+20		Lowest
+16		Lowest
+21		Lowest
+17		Lowest
+
+
+10 - Recursive - Pull the employees reporting to Nancy Emp Id=2
+with recursive Emp_hierarchy as 
+(SELECT EmployeeId, FirstName||" "||LastName as Emp_Name,ReportsTo, Title, 1 as Level FROM Employee e WHERE EmployeeId = 2
+UNION 
+SELECT e2.EmployeeId, e2.FirstName||' '||LastName,e2.ReportsTo, e2.Title, h.Level+1 as Level FROM Emp_hierarchy h 
+join Employee e2 on h.EmployeeId=e2.ReportsTo 
+)
+SELECT * FROM Emp_hierarchy;
+
+EmployeeId	Emp_Name	ReportsTo	Title			Level
+2		Nancy Edwards	1		Sales Manager		1
+3		Jane Peacock	2		Sales Support Agent	2
+4		Margaret Park	2		Sales Support Agent	2
+5		Steve Johnson	2		Sales Support Agent	2
+
+11 - Pivot and Unpivot issues to discuss
+
+
