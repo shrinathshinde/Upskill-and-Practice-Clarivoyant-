@@ -13,6 +13,10 @@ Pivot, Unpivot
 Stored procedures/triggers (optional)
 
 1 - Find the Yearly Running Aggregate of Invoices amount
+SELECT strftime('%Y', InvoiceDate) as Year, SUM(Total) as Yearly_Total,
+Sum(sum(Total)) over(order by strftime('%Y', InvoiceDate)) as Running_Total
+FROM Invoice
+group by strftime('%Y', InvoiceDate) ; 
 
 Year	Yearly_Total		Running_Total
 2007	449.46			449.46
