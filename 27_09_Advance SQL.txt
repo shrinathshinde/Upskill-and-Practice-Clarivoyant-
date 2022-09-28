@@ -1,27 +1,99 @@
 
 https://www.youtube.com/watch?v=KLPULneM4mo
-Grouping Sets - 
+Grouping Sets/Rollup/Cube 
 
-- Rollup- OrderlineNumber wise monthly total Quantity
-OrderLineNumber Total_Quantity
-1		11550
-2		11003
-3		9948
-4		9737
-5		9154
-6		8577
-7		7247
-8		7116
-9		6136
-10		5268
-11		4751
-12		3878
-13		3448
-14		2880
-15		1989
-16		1514
-17		936
-18		384
-Total		105516
+- Rollup- Pull the Course and Vendor wise total Amount
 
-Cubes - 
+Course_Line	 		courseVendor	 	Total_Amount
+PLC Progression-Level 1		Amirhossein Nourian	81.76
+PLC Progression-Level 2		Amirhossein Nourian	305.16
+PLC Progression-Level 6		Amirhossein Nourian	152.76
+PLC Progression-Level 7		Amirhossein Nourian	121.40
+Total				Amirhossein Nourian	661.08
+PLC Progression-Level 1		RealPars		334.84
+PLC Progression-Level 2		RealPars		1895.87
+PLC Progression-Level 3		RealPars		495.69
+PLC Progression-Level 4		RealPars		335.44
+PLC Progression-Level 5		RealPars		131.77
+PLC Progression-Level 6		RealPars		405.52
+PLC Progression-Level 7		RealPars		537.21
+Total				RealPars		4136.34
+PLC Progression-Level 1		Shahpour Shapournia	218.08
+PLC Progression-Level 2		Shahpour Shapournia	209.35
+PLC Progression-Level 3		Shahpour Shapournia	99.86
+PLC Progression-Level 4		Shahpour Shapournia	34.00
+PLC Progression-Level 6		Shahpour Shapournia	61.34
+PLC Progression-Level 7		Shahpour Shapournia	360.28
+Total				Shahpour Shapournia	982.91
+PLC Progression-Level 1		Wally Gastreich		24.23
+PLC Progression-Level 2		Wally Gastreich		38.58
+PLC Progression-Level 4		Wally Gastreich		53.63
+PLC Progression-Level 7		Wally Gastreich		86.70
+Total				Wally Gastreich		203.14
+Total							5983.47
+
+- Using Grouping - Pull the Course and Vendor wise total Amount
+
+Course_Line 		courseVendor  		Grouping(courseLine) 	Grouping(courseVendor) 	Total_Amount
+PLC Progression-Level 1	Amirhossein Nourian	0			0			81.76
+PLC Progression-Level 1	RealPars		0			0			334.84
+PLC Progression-Level 1	Shahpour Shapournia	0			0			218.08
+PLC Progression-Level 1	Wally Gastreich		0			0			24.23
+PLC Progression-Level 1				0			1			658.91
+PLC Progression-Level 2	Amirhossein Nourian	0			0			305.16
+PLC Progression-Level 2	RealPars		0			0			1895.87
+PLC Progression-Level 2	Shahpour Shapournia	0			0			209.35
+PLC Progression-Level 2	Wally Gastreich		0			0			38.58
+PLC Progression-Level 2				0			1			2448.96
+PLC Progression-Level 3	RealPars		0			0			495.69
+PLC Progression-Level 3	Shahpour Shapournia	0			0			99.86
+PLC Progression-Level 3				0			1			595.55
+PLC Progression-Level 4	RealPars		0			0			335.44
+PLC Progression-Level 4	Shahpour Shapournia	0			0			34.00
+PLC Progression-Level 4	Wally Gastreich		0			0			53.63
+PLC Progression-Level 4				0			1			423.07
+PLC Progression-Level 5	RealPars		0			0			131.77
+PLC Progression-Level 5				0			1			131.77
+PLC Progression-Level 6	Amirhossein Nourian	0			0			152.76
+PLC Progression-Level 6	RealPars		0			0			405.52
+PLC Progression-Level 6	Shahpour Shapournia	0			0			61.34
+PLC Progression-Level 6				0			1			619.62
+PLC Progression-Level 7	Amirhossein Nourian	0			0			121.40
+PLC Progression-Level 7	RealPars		0			0			537.21
+PLC Progression-Level 7	Shahpour Shapournia	0			0			360.28
+PLC Progression-Level 7	Wally Gastreich		0			0			86.70
+PLC Progression-Level 7				0			1			1105.59
+Total						1			1			5983.47
+
+- Pivoting Students payments recieved in 2003, 2004, 2005 with Idnumber>400
+select coalesce(studentNumber, 'Grand Total') as Student_number,
+sum(case when date_format(paymentDate,'%Y')=2003 then amount else 0 end) as '2003',
+sum(case when date_format(paymentDate,'%Y')=2004 then amount else 0 end) as '2004',
+sum(case when date_format(paymentDate,'%Y')=2005 then amount else 0 end) as '2005',
+sum(amount) as Total_Amount
+from payments where studentNumber>400
+group by studentNumber with rollup;
+
+Student_number  2003  	2004  		2005  		Total_Amount
+406		0.00	74246.12	12190.85	86436.97
+412		0.00	66704.94	0.00		66704.94
+415		0.00	31310.09	0.00		31310.09
+424	      43708.35 	25505.98	0.00		69214.33
+447	      23663.65	26304.13	0.00		49967.78
+448		0.00	48809.90	27966.54	76776.44
+450		0.00	59551.38	0.00		59551.38
+452	      42252.87	0.00		8807.12		51059.99
+455	      38139.18	32239.47	0.00		70378.65
+456		0.00	29230.43	0.00		29230.43
+458	      57131.92	55308.17	0.00	       112440.09
+462	       9977.85	48355.87       30293.77		88627.49
+471	      35505.63	9415.13		0.00		44920.76
+473	      17746.26	7612.06		0.00		25358.32
+475	       7678.25	36070.47	0.00		43748.72
+484	      47513.19	3474.66	 	0.00		50987.85
+486	      25833.14	51893.45	0.00		77726.59
+487	      29997.09	12573.28	0.00		42570.37
+489	      22275.73	7310.42		0.00		29586.15
+495	      59265.14	6276.60		0.00		65541.74
+496	      32077.44	52166.00	30253.75       114497.19
+Grand Total  492765.69	684358.55      109512.03      1286636.27
