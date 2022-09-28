@@ -1,0 +1,27 @@
+
+https://www.youtube.com/watch?v=KLPULneM4mo
+Grouping Sets - 
+
+- Rollup- OrderlineNumber wise monthly total Quantity
+OrderLineNumber Total_Quantity
+1		11550
+2		11003
+3		9948
+4		9737
+5		9154
+6		8577
+7		7247
+8		7116
+9		6136
+10		5268
+11		4751
+12		3878
+13		3448
+14		2880
+15		1989
+16		1514
+17		936
+18		384
+Total		105516
+
+Cubes - 
