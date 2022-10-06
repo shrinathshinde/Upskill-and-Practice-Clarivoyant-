@@ -1,0 +1,146 @@
+Python learning 06/10
+
+1) - Tupple :- Immutable can be useful when need to keep data unchanged
+numbers = (1,2,3,4,5)
+print(numbers[0])
+= 1
+
+2) Unpacking :- unpack the tupple values and assign it to individual variable.
+Also same can be used with lists as well.
+coordinates = (1,2,3)
+x,y,z = coordinates
+print(y)
+= 2
+
+3) Dictionaries - {} curley braces are used to store disctionary used for paring records as Key and Value.
+Keys should be unique
+
+customer = {"name": "John Smith",
+	    "age": 30,
+	    "is_verified": True}
+print(customer["name"])
+OR 
+print(customer.get("name"))
+= John Smith
+
+- Update Disctionary
+
+customer = {"name": "John Smith",
+	    "age": 30,
+	    "is_verified": True}
+customer["name"] = "Jack Smith"
+print(customer["name"])
+= Jack Smith
+
+Assign value to a Key in disctonary
+
+customer = {"name": "John Smith",
+	    "age": 30,
+	    "is_verified": True}
+customer["birthdate"] = "Jan 1 1980"
+print(customer["birthdate"])
+= Jan 1 1980
+
+phone = input("Enter Phone number: ")
+digits_mapping = {
+"1":"One"
+"2":"Two"
+"3":"Three"
+"4":"Four"
+
+}
+output = ""
+for numb in phone:
+    output +=digits mapping.get(numb, "!") + " "
+print(output)
+
+Enter Phone Number: 1345
+= One Three Four !
+
+4) Functions - needs to be delcared first and then can be called into desired following step of code
+1 -
+def greet_user():
+    print("Hi there!")
+    print("Welcom aboard")
+
+print("Start")
+greet_user()
+print("Finish")
+
+=Start
+Hi there!
+Welcome aboard
+Finish
+
+5) Parameter - passes information to fuctions
+
+def greet_user(first_name, last_name):
+    print(f"Hi {first_name} {last_name}1")
+    print("Welcom aboard")
+
+print("Start")
+greet_user("John", "Smith")
+greet_user("Mary", "Leon")
+print("Finish")
+
+=Start
+Hi John Smith!
+Welcome aboard
+Hi Mary Leon!
+Welcome aboard
+Finish
+
+6) Keyword Argument - positional arguments of parameter defined with parameter name and argument, mostly used in fuction with multiple numberical values.
+while passing both use positional argument first and then keyword argument.
+
+def greet_user(first_name, last_name):
+    print(f"Hi {first_name} {last_name}1")
+    print("Welcom aboard")
+
+print("Start")
+greet_user(last_name="Smith", first_name="John")
+greet_user(last_name="Leon", first_name="Mary")
+print("Finish")
+
+=Start
+Hi Smith John!
+Welcome aboard
+Hi Leon Mary!
+Welcome aboard
+Finish
+
+7) Return Statement - fuction that returns values
+def square(number):
+    return number * number
+result = square(3)
+print(result) or print(square(3))
+= 9
+
+8) Exceptions - handling errors - valueerror, zerodivisionerror etc. Using try except block to handle the error message
+exit code 0 = successful resutl any other code means errors
+
+try:
+    age = int((input("Age: "))
+    print(age)
+except ValueError:
+    print("Invalid value")
+Age: abc
+= Invalid value
+
+9) Comments - Used to add notes starting with #
+
+10) 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
