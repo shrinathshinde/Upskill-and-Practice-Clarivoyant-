@@ -1,0 +1,417 @@
+Pythong Learning_07_10
+
+10) Classes - define a new type of point. These types can have methods that we define in the body of the class.
+They can also have attributes that we can set anywhere in our programs
+
+(point.methodslike move, draw, get_distance) use capitalzed first letter of every word
+
+class Point:
+	def move(self):
+	print("move")
+
+	def draw(self):
+	print("draw")
+
+point1 = Point() #creating objects as instance of a new class
+point1.draw()
+
+=draw
+
+11) Classes - #Objects can also have atributes like variables belonging to particular objects
+
+class Point:
+	def move(self):
+	print("move")
+
+	def draw(self):
+	print("draw")
+
+point1 = Point() #creating objects as instance of a new class
+point1.x = 10
+point1.y = 20
+print(point1.x)
+point1.draw()
+
+=10
+=draw
+
+12)
+
+class Point:
+	def move(self):
+	print("move")
+
+	def draw(self):
+	print("draw")
+
+point1 = Point() #creating objects as instance of a new class
+point1.x = 10
+point1.y = 20
+print(point1.x)
+point1.draw()
+
+point2 = Point()
+point2.x = 1
+print(point2.x)
+
+=draw
+=1
+
+13) Constructors - Is a fuctions that gets called at the time of creating an object
+__init__ ----initialized x, y ---10,20
+class Point:
+	def__init__(self, x, y):
+		self.x=x
+		self.y=y
+	def move(self):
+	print("move")
+
+	def draw(self):
+	print("draw")
+
+point = Point(10,20) 
+point.x = 11
+print(point.x)
+
+=10
+
+14 - Constructors - Changing the point value of x see below before print
+__init__ ----initialized x, y ---10,20
+class Point:
+	def__init__(self, x, y):
+		self.x=x
+		self.y=y
+	def move(self):
+	print("move")
+
+	def draw(self):
+	print("draw")
+
+point = Point(10,20) 
+point.x = 11
+print(point.x)
+
+=11
+
+15 -Constructors - Defining a new type of Person object should have name attribute as well as talk method
+
+class Person:
+	def __init__(self, name):
+		self.name = name
+
+	def talk(self):
+		print ("talk")
+
+
+
+	john = Person("John Smith")
+	print(john.name)
+	john.talk()
+
+= John Smith
+=talk
+
+16 - Constructors
+class Person:
+	def __init__(self, name):
+		self.name = name
+	def talk(self):
+		print (f"Hi, I am {self.name}")
+
+	john = Person("John Smith")
+	john.talk()
+
+= Hi, I am John Smith
+=talk
+
+17 - Constructors - adding another object
+class Person:
+	def __init__(self, name):
+		self.name = name
+	def talk(self):
+		print (f"Hi, I am {self.name}")
+
+	john = Person("John Smith")
+	john.talk()
+	
+	bob - Person("Bob Smith")
+	bob.talk()
+
+=Hi, I am John Smith
+=Hi, I am Bob Smith
+
+18 - Inheritance - A mechanism for using code e.g. combing classes into under one method
+
+class Mammal:
+	def walk(self):
+	    print("walk")
+
+
+class Dog(Mammal):
+	pass
+
+class Cat(Mammal):
+	pass
+
+dog1 = Dog()
+dog1.walk()
+
+=walk
+
+19 - Inheritance - defining additional method
+
+class Mammal:
+	def walk(self):
+	    print("walk")
+
+
+class Dog(Mammal):
+	def bark(self):
+	print("bark")
+
+class Cat(Mammal):
+	def annoying("self"):
+	print("annoying")
+
+dog1 = Dog()
+dog1.walk() #here we get two methods to select in place walk or bark for dog similarly for cat we can use it.
+
+
+20 - Modules - its basically a file with some code that is used in organizing codes into files
+Instead of writing all code all the functions and classes in app.py we break code into multiple files to refer as a module.
+It will be organized and provide ability to re-use the module.
+
+def lbs_to_kg(weight):
+	return weight * 0.45
+
+def kg_to_lbs(weight):
+	return weight / 0.45
+
+Taking these two functions and adding them into a separate module called converters and then import it to any other program that needs 
+converter functions.
+
+Create a new file name it converters paste the functions defined into this converters file.
+In the new file now converters can be imported...
+
+import converters		#(here converter is an object so using . we can call functions from it.
+print(converters.kg_to_lbs(70))
+= 155.55
+ 
+import converters
+print(converters.lbs_to_kg(155.56))
+=70
+
+21 - Modules - instead of importing entire module specific functions or class can be imported
+
+from converters import kg_into_lbs	#using ctrl+space all the functions can be seen from the module for import selection
+
+kg_to_lbs(100)
+
+=222.22
+
+
+22 - Write a function, find max. This function should take a list and return the largest number. Then add this module to separate module called utils.
+Utils module will have bunch of utility functions. 
+
+def find_max(numbers):
+max = numbers[0]
+for number in numbers:
+	for number in numbers:
+	if number > max:
+		max = number
+	return max
+
+#creat new file and paste above function into it and name it utils
+
+from utils import find_max
+
+numbers = [10, 3, 6, 2]		#add list of numbers here for maximum number comparison
+max = find_max(numbers)
+print(max)
+
+= 10
+
+23 - Packages - another way to organize code. Container for multiple modules. Useful while using multiple packages and modules.
+
+Add new directory from menu name it ecommerce
+right click create new python file name __init__ and another file name it shipping
+open shipping and add function for calculating shipping costs
+
+def calc_shipping():
+	print("calc_shipping")
+
+Open new file
+
+import ecommerce.shipping					#importing entire package
+ecommerce.shipping.calc_shipping()
+
+=calc_shipping
+
+
+24 - Using another way to shorten the script import function from package
+
+from ecommerce.shipping import calc_shipping, calc_tax		#also multiple functions can be imported like calc_tax
+calc_shipping()							#in this way one function can be called in multiple times easily
+calc_shipping()
+calc_shipping()
+
+=calc_shipping
+
+25 - Generating Random Values - built in modules/libraries like sending email, working with date and time, generating random values and passwords etc.
+
+how to find standard library - In Internet browser search for "Python 3 module index"
+
+https://docs.python.org/3/py-modindex.html
+
+import random
+
+for i in range(3):
+	print(random.random())		# using loop it will run 3 times and give 3 values here
+
+= 0.13837512722025946
+= 0.5765133130458506
+= 0.6627097235518797
+
+26 - Generating Random values - for a range between numbers
+import random
+
+for i in range(3):
+	print(random.randint(10, 20))		#using randint for getting random numbers between 10-20
+
+= 20
+= 13
+= 18
+
+27 - Running same code again it will give another 3 random number between defined range
+import random
+
+for i in range(3):
+	print(random.randint(10, 20))		#using randint for getting random numbers between 10-20
+
+= 20
+= 19
+= 11
+
+
+28 - For selecting random values from a defined list
+import random
+
+members = ["John", "Mary", "Bob", "Mosh"]
+leader = random.choice(members)
+print(leader)
+
+= Mary
+
+29 - Program to roll a dice, while running it every time we get different values
+define class as dice
+create a method roll - to get a tupple
+
+import random
+
+
+class Dice:
+	def roll(self):
+	first = random.randint(1,6)		
+	second = random.randint(1,6)
+	return first, second
+
+dice = Dice()
+print(dice.roll())
+
+=(2, 5)
+
+
+30 - Files and Directories - From Python 3 module index have a module "pathlib" provides object oriented file system paths
+Provides clases useful to create objects to work with directories and files
+
+# absolute path - path from system directory from root of hard disk
+# relative path - path from current python directory
+
+from pathlib import Path
+
+path = Path("ecommerce")		#if path is not updated in () it will pick the current path
+
+31 - Files and Directories - checking if path/dir exists 
+
+from pathlib import Path
+
+path = Path("ecommerce")
+print(path.exists()) = True/False
+= True
+
+32 - Creating new dir path 
+from pathlib import Path
+
+path = Path("new")
+path.mkdir()
+
+# in the path new dir appears
+
+33 - Removing existing dir path 
+from pathlib import Path
+
+path = Path("new")
+path.rmdir()
+
+# in the path new dir disappears/removed
+
+
+34 - Finding all the files and directories from current path 
+
+#set path to current directory as () 
+#adding string "" to define search pattern, add * to find all, optionally can add extension as .* to search all extensions
+like *.py or *.xls or *.csv
+#to find only files from the generator object loop is used
+
+from pathlib import Path
+path = Path()
+for file in path.glob("*.py"):
+	print(file)
+
+=utils.py
+=app.py
+=ecommerce
+=.....
+
+35 - Pypi and Pip - Python packaged Index - Installing packages from pypi.org
+- https://pypi.org/ 
+Can use existing published packages
+
+# openpyxl - package is used for working with excel spreadsheets
+#installing package
+
+Open a terminal/command prompt
+
+pip install openpyxl
+
+#It will be installed under External libraries->site-packages libraty root
+
+36 - Project - processing spreadsheets
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
